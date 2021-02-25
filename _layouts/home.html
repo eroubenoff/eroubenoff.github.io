@@ -2,6 +2,8 @@
 layout: page
 ---
 
+{{ content }}
+
 <div id=container>
     <img src=assets/img/ER_in_santacruz.jpg alt="ER In Santa Cruz" style="float:left; width:560px; height:560px"/>
     <div id=about_text style="width:350px; float:right; margin-left:50px; height:200px; font-size:10pt">
@@ -15,7 +17,6 @@ layout: page
     </div>
 </div>
 
-{{ content }}
 
 {% assign posts = paginator.posts | default: site.posts %}
 
