@@ -14,7 +14,6 @@ author: Ethan Roubenoff
 # --- List of links in the navigation bar --- #
 
 navbar-links:
-  About: "aboutme"
   CV: "cv"
   Research: "research"
   #  Resources:
