@@ -4,13 +4,12 @@ title: About me
 subtitle: Why you'd want to go on a date with me
 ---
 
-My name is Inigo Montoya. I have the following qualities:
+![ER in santacruz](assets/img/ER_in_santacruz.jpg){: style="float: left; height: 200px"}
 
-- I rock a great mustache
-- I'm extremely loyal to my family
+I am a graduate student at the University of California, Berkeley, in the department of Demography.  
+My main fields of interest are spatial demography, spatial statistics, and public health demography, with
+a focus on residential and employment inequality.
 
-What else do you need?
-
-### My story
-
-To be honest, I'm having some trouble remembering right now, so why don't you just watch [my movie](https://en.wikipedia.org/wiki/The_Princess_Bride_%28film%29) and it will answer **all** your questions.
+I am a researcher with the [Berkeley Interdisciplinary Migration Initiative](https://bimi.berkeley.edu/) working on 
+the [Mapping Spatial Inequality](https://bimi.berkeley.edu/mapping-spatial-inequality) project. I have previously
+been affiliated with the [Human Mortality Database](http://mortality.org) and  the [Chicago Democract Project](http://cdp.northwestern.edu).
