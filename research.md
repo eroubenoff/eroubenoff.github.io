@@ -32,4 +32,4 @@ Public Health Demography. You can read my materials here:
 * [Spatial Demography Reading List](/assets/QEs/ER Spatial Methods Final.pdf)
 * [Spatial Demography Memo](/assets/QEs/ER_Spatial_Memo.pdf)
 * [Public Health Demography Reading List](/assets/QEs/ER Public Health Demography Final.pdf)
-* [Public Health Demography Memo](assets/QEs/Public_Health_Demog_Memo.pdf)
+* [Public Health Demography Memo](assets/QEs/ER_Public_Health_Demog_Memo.pdf)
