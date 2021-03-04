@@ -2,7 +2,12 @@
 title: "How Many Times Do The Grateful Dead Say Each Song's Name In The Lyrics?"
 author: "Ethan Roubenoff"
 date: "3/3/2021"
-output: html_document
+output:
+  md_document:
+    variant: gfm
+    preserve_yaml: TRUE
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, encoding = encoding, output_file=paste0(Sys.Date(), "-", sub(".Rmd", ".md",inputFile)), output_dir = "~/eroubenoff.github.io/_posts") })
 layout: post
 tags: [grateful-dead, fun]
 ---
@@ -46,78 +51,68 @@ sanitized them.
 
 Let’s scrape all the lyrics:
 
-``` r
-# Get the index page
-page <- readLines('https://www.cs.cmu.edu/~mleone/dead-lyrics.html')
+    # Get the index page
+    page <- readLines('https://www.cs.cmu.edu/~mleone/dead-lyrics.html')
 
-# Remove lines that aren't links to pages
-page <- str_subset(page, pattern = "A HREF=\"gdead/dead-lyrics/")
+    # Remove lines that aren't links to pages
+    page <- str_subset(page, pattern = "A HREF=\"gdead/dead-lyrics/")
 
-# Convert to a two-column df, one column for song name and one for the link address
-page <- tibble(
-  song_name = str_extract(page, regex('(?<=\\">)(.*)(?=</A>)')),
-  link = str_extract(page, regex('(?<=HREF=\")(.*)(?=\\">)'))
-  ) %>% 
-  mutate(link = paste0('https://www.cs.cmu.edu/~mleone/', link))
+    # Convert to a two-column df, one column for song name and one for the link address
+    page <- tibble(
+      song_name = str_extract(page, regex('(?<=\\">)(.*)(?=</A>)')),
+      link = str_extract(page, regex('(?<=HREF=\")(.*)(?=\\">)'))
+      ) %>% 
+      mutate(link = paste0('https://www.cs.cmu.edu/~mleone/', link))
 
-# Retrieve the lyrics from each page
+    # Retrieve the lyrics from each page
 
-for (i in 1:nrow(page)) {
-  message("Retriving lyrics for ", pull(page[i, "song_name"]), ", ", i , " of ", nrow(page))
-  page[i, "lyrics"] <- paste(readLines(pull(page[i, "link"])), collapse = " ")
-}
+    for (i in 1:nrow(page)) {
+      message("Retriving lyrics for ", pull(page[i, "song_name"]), ", ", i , " of ", nrow(page))
+      page[i, "lyrics"] <- paste(readLines(pull(page[i, "link"])), collapse = " ")
+    }
 
-# Basic processing: make everything lowercase, remove punctuation, remove 0-9, remove parentheticals
-page <- page %>%
-  mutate(
-    song_name_clean = tolower(song_name),
-    song_name_clean = str_remove_all(song_name_clean, "(.*?)"), # remove parentheticals
-    song_name_clean = str_remove_all(song_name_clean, "[^\\w]"), # remove nonalphanumeric
-  ) %>%
-  mutate(
-    lyrics_clean = tolower(lyrics),
-    lyrics_clean = str_remove_all(lyrics_clean, "(.*?)"), # remove parentheticals
-    lyrics_clean = str_remove_all(lyrics_clean, "[^\\w]") # remove nonalphanumeric
-  )
+    # Basic processing: make everything lowercase, remove punctuation, remove 0-9, remove parentheticals
+    page <- page %>%
+      mutate(
+        song_name_clean = tolower(song_name),
+        song_name_clean = str_remove_all(song_name_clean, "(.*?)"), # remove parentheticals
+        song_name_clean = str_remove_all(song_name_clean, "[^\\w]"), # remove nonalphanumeric
+      ) %>%
+      mutate(
+        lyrics_clean = tolower(lyrics),
+        lyrics_clean = str_remove_all(lyrics_clean, "(.*?)"), # remove parentheticals
+        lyrics_clean = str_remove_all(lyrics_clean, "[^\\w]") # remove nonalphanumeric
+      )
 
-# Count the number of times the song title appears in the lyrics
+    # Count the number of times the song title appears in the lyrics
 
-page <- page %>%
-  rowwise() %>%
-  mutate(song_name_count = str_count(lyrics_clean, song_name_clean)- 1,
-         song_name_count_fuzzy = list(agrep(lyrics_clean, song_name_clean)))
+    page <- page %>%
+      rowwise() %>%
+      mutate(song_name_count = str_count(lyrics_clean, song_name_clean)- 1,
+             song_name_count_fuzzy = list(agrep(lyrics_clean, song_name_clean)))
 
-dead_lyrics <- page
-rm(page)
-```
+    dead_lyrics <- page
+    rm(page)
 
 Here’s a histogram of the number of times they say the song name in each
 song.
 
-``` r
-dead_lyrics %>%
-  ggplot() + 
-  geom_histogram(aes(song_name_count), binwidth = 1)
-```
+    dead_lyrics %>%
+      ggplot() + 
+      geom_histogram(aes(song_name_count), binwidth = 1)
 
-![](2021-03-03-dead_lyrics_files/figure-markdown_github/unnamed-chunk-4-1.png)
+![](/assets/img/2021-03-03-dead_lyrics/unnamed-chunk-3-1.png)<!-- -->
 
 Is that a poisson distribution I see?
 
-``` r
-ll <- function(lambda) {-sum(dpois(dead_lyrics$song_name_count, lambda, log = TRUE))}
-p <- optim(par = 3, f = ll, lower = 0)
-```
+    ll <- function(lambda) {-sum(dpois(dead_lyrics$song_name_count, lambda, log = TRUE))}
+    p <- optim(par = 3, f = ll, lower = 0)
 
-    ## Warning in optim(par = 3, f = ll, lower = 0): bounds can only be used with method L-BFGS-B (or Brent)
+    ggplot() + 
+      geom_histogram(data = dead_lyrics, mapping = aes(song_name_count), binwidth = 1) +
+      geom_line(aes(x = 0:30, y=nrow(dead_lyrics)*dpois(0:30, lambda = p$par)), col = "red")
 
-``` r
-ggplot() + 
-  geom_histogram(data = dead_lyrics, mapping = aes(song_name_count), binwidth = 1) +
-  geom_line(aes(x = 0:30, y=nrow(dead_lyrics)*dpois(0:30, lambda = p$par)), col = "red")
-```
-
-![](2021-03-03-dead_lyrics_files/figure-markdown_github/unnamed-chunk-5-1.png)
+![](/assets/img/2021-03-03-dead_lyrics/unnamed-chunk-4-1.png)<!-- -->
 
 Woah woah woah. I think this would be a great time to do a totally nuts
 regression. Like… one for that [website on spurious
@@ -130,58 +125,48 @@ deadheads so much—[it’s already been
 tabulated](https://whitegum.com/introjs.htm?/RECTAB3.HTM). I used the
 “fuzzyjoin” package and it worked super well:
 
-``` r
-play_freq <- read_csv("dead_play_freq.csv")
+    play_freq <- read_csv("dead_play_freq.csv")
 
-play_freq <- play_freq %>%
-  mutate(
-    song_name_clean = tolower(`SONG TITLE`),
-    song_name_clean = str_remove_all(song_name_clean, "(.*?)"), # remove parentheticals
-    song_name_clean = str_remove_all(song_name_clean, "[^\\w]"), # remove nonalphanumeric
-  ) %>%
-  select(song_name_clean, times_played = `Times\nPlayed`)
+    play_freq <- play_freq %>%
+      mutate(
+        song_name_clean = tolower(`SONG TITLE`),
+        song_name_clean = str_remove_all(song_name_clean, "(.*?)"), # remove parentheticals
+        song_name_clean = str_remove_all(song_name_clean, "[^\\w]"), # remove nonalphanumeric
+      ) %>%
+      select(song_name_clean, times_played = `Times\nPlayed`)
 
-agrepl(dead_lyrics$song_name_clean, play_freq$song_name_clean)
+    agrepl(dead_lyrics$song_name_clean, play_freq$song_name_clean)
 
-dead_lyrics <- stringdist_inner_join(dead_lyrics, play_freq, by = "song_name_clean", max_dist = 10, distance_col  ="distance_col") %>%
-  group_by(song_name) %>%
-  filter(distance_col == min(distance_col))  %>% 
-  filter(n() ==1)
-```
+    dead_lyrics <- stringdist_inner_join(dead_lyrics, play_freq, by = "song_name_clean", max_dist = 10, distance_col  ="distance_col") %>%
+      group_by(song_name) %>%
+      filter(distance_col == min(distance_col))  %>% 
+      filter(n() ==1)
 
 Fit a hilariously bad poisson distribution:
 
-``` r
-ll <- function(lambda) {-sum(dpois(dead_lyrics$times_played, lambda, log = TRUE))}
-p <- optim(par = 3, f = ll, lower = 0)
-```
+    ll <- function(lambda) {-sum(dpois(dead_lyrics$times_played, lambda, log = TRUE))}
+    p <- optim(par = 3, f = ll, lower = 0)
 
-    ## Warning in optim(par = 3, f = ll, lower = 0): bounds can only be used with method L-BFGS-B (or Brent)
 
-``` r
-ggplot() + 
-  geom_histogram(data = dead_lyrics, mapping = aes(times_played), binwidth = 10) +
-  geom_line(aes(x = 0:600, y=nrow(dead_lyrics)*dpois(0:600, lambda = p$par)), col = "red")
-```
 
-![](2021-03-03-dead_lyrics_files/figure-markdown_github/unnamed-chunk-7-1.png)
+    ggplot() + 
+      geom_histogram(data = dead_lyrics, mapping = aes(times_played), binwidth = 10) +
+      geom_line(aes(x = 0:600, y=nrow(dead_lyrics)*dpois(0:600, lambda = p$par)), col = "red")
+
+![](/assets/img/2021-03-03-dead_lyrics/unnamed-chunk-6-1.png)<!-- -->
 
 Take a look at the data:
 
-``` r
-ggplot(dead_lyrics) +
-  geom_point(aes(song_name_count, times_played)) 
-```
+    ggplot(dead_lyrics) +
+      geom_point(aes(song_name_count, times_played)) 
 
-![](2021-03-03-dead_lyrics_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](/assets/img/2021-03-03-dead_lyrics/unnamed-chunk-7-1.png)<!-- -->
 
 And then do a poisson regression on the number of times each song was
 played and the number of times they say the song title in the lyrics:
 
-``` r
-reg <- glm(times_played ~ song_name_count, data = dead_lyrics, family = poisson(link = "log"))
-summary(reg)
-```
+    reg <- glm(times_played ~ song_name_count, data = dead_lyrics, family = poisson(link = "log"))
+    summary(reg)
 
     ## 
     ## Call:
@@ -220,63 +205,59 @@ Note to future employers: this is all sarcastic. Please!
 Back to the question at hand. What is the song that says the name the most number of times?
 -------------------------------------------------------------------------------------------
 
-``` r
-dead_lyrics %>%
-  dplyr::select(song_name, song_name_count, times_played) %>% 
-  arrange(-song_name_count) %>%
-  filter(song_name_count > 10)  %>%
-  knitr::kable()
-```
+    dead_lyrics %>%
+      dplyr::select(song_name, song_name_count, times_played) %>% 
+      arrange(-song_name_count) %>%
+      filter(song_name_count > 10)  %>%
+      knitr::kable()
 
-| song_name            | song_name_count | times_played |
-|:---------------------|----------------:|-------------:|
-| Might As Well        |              34 |          111 |
-| Good Lovin’          |              25 |          428 |
-| To Lay Me Down       |              20 |           63 |
-| He’s Gone            |              18 |          328 |
-| Money, Money         |              15 |            3 |
-| Kansas City          |              14 |          334 |
-| Lazy Lightnin’       |              14 |          111 |
-| Sugaree              |              14 |          357 |
-| Wake Up Little Susie |              13 |           14 |
-| Deal                 |              12 |          423 |
-| Pretty Peggy O       |              12 |          265 |
-| Ship of Fools        |              12 |          225 |
-| Heaven Help The Fool |              11 |            7 |
+| song\_name           | song\_name\_count | times\_played |
+|:---------------------|------------------:|--------------:|
+| Might As Well        |                34 |           111 |
+| Good Lovin’          |                25 |           428 |
+| To Lay Me Down       |                20 |            63 |
+| He’s Gone            |                18 |           328 |
+| Money, Money         |                15 |             3 |
+| Kansas City          |                14 |           334 |
+| Lazy Lightnin’       |                14 |           111 |
+| Sugaree              |                14 |           357 |
+| Wake Up Little Susie |                13 |            14 |
+| Deal                 |                12 |           423 |
+| Pretty Peggy O       |                12 |           265 |
+| Ship of Fools        |                12 |           225 |
+| Heaven Help The Fool |                11 |             7 |
 
 Looks like it is Might as Well, which, yeah. But that is a late-discog
 add. Here’s a thought: the song title that has been said the most by the
 band, i.e, the number of times the name is said per song \* the number
 of plays.
 
-``` r
-dead_lyrics <- dead_lyrics %>%
-  mutate(total_name_times = song_name_count * times_played) 
+    dead_lyrics <- dead_lyrics %>%
+      mutate(total_name_times = song_name_count * times_played) 
 
-dead_lyrics %>%
-  dplyr::select(song_name, song_name_count, times_played, total_name_times) %>% 
-  arrange(-total_name_times) %>% 
-  head(15) %>%
-  knitr::kable()
-```
+    dead_lyrics %>%
+      dplyr::select(song_name, song_name_count, times_played, total_name_times) %>% 
+      arrange(-total_name_times) %>% 
+      head(15) %>%
+      knitr::kable()
 
-| song_name                       | song_name_count | times_played | total_name_times |
-|:--------------------------------|----------------:|-------------:|-----------------:|
-| Good Lovin’                     |              25 |          428 |            10700 |
-| He’s Gone                       |              18 |          328 |             5904 |
-| Deal                            |              12 |          423 |             5076 |
-| Sugaree                         |              14 |          357 |             4998 |
-| Kansas City                     |              14 |          334 |             4676 |
-| Truckin’                        |               9 |          519 |             4671 |
-| Might As Well                   |              34 |          111 |             3774 |
-| The Harder They Come            |               6 |          583 |             3498 |
-| Pretty Peggy O                  |              12 |          265 |             3180 |
-| Run for the Roses               |               5 |          583 |             2915 |
-| Mama Tried                      |               9 |          302 |             2718 |
-| Ship of Fools                   |              12 |          225 |             2700 |
-| Not Fade Away                   |               5 |          531 |             2655 |
-| Goin’ Down The Road Feelin’ Bad |               9 |          293 |             2637 |
-| Tennessee Jed                   |               6 |          433 |             2598 |
+| song\_name                      | song\_name\_count | times\_played | total\_name\_times |
+|:--------------------------------|------------------:|--------------:|-------------------:|
+| Good Lovin’                     |                25 |           428 |              10700 |
+| He’s Gone                       |                18 |           328 |               5904 |
+| Deal                            |                12 |           423 |               5076 |
+| Sugaree                         |                14 |           357 |               4998 |
+| Kansas City                     |                14 |           334 |               4676 |
+| Truckin’                        |                 9 |           519 |               4671 |
+| Might As Well                   |                34 |           111 |               3774 |
+| The Harder They Come            |                 6 |           583 |               3498 |
+| Pretty Peggy O                  |                12 |           265 |               3180 |
+| Run for the Roses               |                 5 |           583 |               2915 |
+| Mama Tried                      |                 9 |           302 |               2718 |
+| Ship of Fools                   |                12 |           225 |               2700 |
+| Not Fade Away                   |                 5 |           531 |               2655 |
+| Goin’ Down The Road Feelin’ Bad |                 9 |           293 |               2637 |
+| Tennessee Jed                   |                 6 |           433 |               2598 |
 
 Amazing. Over a 30-year touring history, the phrase “Good Lovin’” is
 said over 10,000 times. I’m so glad we know this now.
