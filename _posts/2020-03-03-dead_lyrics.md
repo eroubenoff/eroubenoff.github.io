@@ -96,7 +96,7 @@ song.
       ggplot() + 
       geom_histogram(aes(song_name_count), binwidth = 1)
 
-![](/Users/eroubenoff/eroubenoff.github.io/_posts/dead_lyrics_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+![](/Users/eroubenoff/eroubenoff.github.io/_posts/2020-03-03-dead_lyrics_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 
 Is that a poisson distribution I see?
 
@@ -109,7 +109,7 @@ Is that a poisson distribution I see?
       geom_histogram(data = dead_lyrics, mapping = aes(song_name_count), binwidth = 1) +
       geom_line(aes(x = 0:30, y=nrow(dead_lyrics)*dpois(0:30, lambda = p$par)), col = "red")
 
-![](/Users/eroubenoff/eroubenoff.github.io/_posts/dead_lyrics_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+![](/Users/eroubenoff/eroubenoff.github.io/_posts/2020-03-03-dead_lyrics_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 Woah woah woah. I think this would be a great time to do a totally nuts
 regression. Like… one for that [website on spurious
@@ -150,14 +150,14 @@ Fit a hilariously bad poisson distribution:
       geom_histogram(data = dead_lyrics, mapping = aes(times_played), binwidth = 10) +
       geom_line(aes(x = 0:600, y=nrow(dead_lyrics)*dpois(0:600, lambda = p$par)), col = "red")
 
-![](/Users/eroubenoff/eroubenoff.github.io/_posts/dead_lyrics_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+![](/Users/eroubenoff/eroubenoff.github.io/_posts/2020-03-03-dead_lyrics_files/figure-markdown_strict/unnamed-chunk-7-1.png)
 
 Take a look at the data:
 
     ggplot(dead_lyrics) +
       geom_point(aes(song_name_count, times_played)) 
 
-![](/Users/eroubenoff/eroubenoff.github.io/_posts/dead_lyrics_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](/Users/eroubenoff/eroubenoff.github.io/_posts/2020-03-03-dead_lyrics_files/figure-markdown_strict/unnamed-chunk-8-1.png)
 
 And then do a poisson regression on the number of times each song was
 played and the number of times they say the song title in the lyrics:
