@@ -17,15 +17,15 @@ brilliant, but mostly I love rabbit holes. The conventional wisdom that
 “every show is different” misses the mark, I think—the fun of the Dead
 is seeing how songs evolve between shows, over years. How many times did
 they play [this one two-chord
-sequence]('https://www.youtube.com/watch?v=rZjm6LyGwzI') in Dark Star?
+sequence](https://www.youtube.com/watch?v=rZjm6LyGwzI) in Dark Star?
 ([Many
-times.]('https://archive.org/post/1055387/guide-to-the-tighten-up-jam'))
+times.](https://archive.org/post/1055387/guide-to-the-tighten-up-jam))
 What about when that riff shows up randomly in a different track the
 next show? You can kind of triangulate what’s going on in their minds,
 get into Jerry’s head a little bit. The online community of deadheads is
 also a blast. [Here’s just the tip of the iceberg of how much work
 archivists put into
-that.]('http://deadessays.blogspot.com/2010/01/deads-early-thematic-jams.html')
+that.](http://deadessays.blogspot.com/2010/01/deads-early-thematic-jams.html)
 I’ve read this post a dozen times, and a dozen more just like it. It’s a
 great thing to hyperfixate on, and a real goldmine when you find the one
 random recording from a random place with a minute-long gold nugget in
@@ -39,15 +39,15 @@ through. I’m consuming more music now than I ever have.
 The hallmark of every Grateful Dead lyrical composition is when they
 scream the title, full volume, slightly off-kilter during the chorus.
 The only song I knew of that didn’t do this, off the top of my head, was
-[The Eleven]('https://www.youtube.com/watch?v=J5McdXcZKbw') (which feels
+[The Eleven](https://www.youtube.com/watch?v=J5McdXcZKbw) (which feels
 like cheating—the song name is the key signature. Does that count?) This
 led me to my research question: *In each Grateful Dead song, how many
 times do they say the song title?*
 
 Well, dear reader, let’s find out. I scraped all of the 300ish listed
 lyrics from [Mark Leone’s lyrics
-archive]('https://www.cs.cmu.edu/~mleone/dead-lyrics.html') and
-sanitized them.
+archive](https://www.cs.cmu.edu/~mleone/dead-lyrics.html) and sanitized
+them.
 
 Let’s scrape all the lyrics:
 
