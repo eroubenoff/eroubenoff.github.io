@@ -24,3 +24,12 @@ indices based on the Two-Step Floating Catchment Area methodology
 and legal services for immigrants is abundant and where it is poor,
 and identifying determinants and patterns therein.
 
+
+# Qualifying Exams
+I took QEs in Spatial Demography (empahsis on Spatial Statistics) and 
+Public Health Demography. You can read my materials here:
+
+* [Spatial Demography Reading List](/assets/QEs/ER Spatial Methods Final.pdf)
+* [Spatial Demography Memo](/assets/QEs/ER_Spatial_Memo.pdf)
+* [Public Health Demography Reading List](/assets/QEs/ER Public Health Demography Final.pdf)
+* [Public Health Demography Memo](assets/QEs/Public_Health_Demog_Memo.pdf)
