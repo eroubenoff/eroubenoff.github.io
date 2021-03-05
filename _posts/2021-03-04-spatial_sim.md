@@ -1,7 +1,7 @@
 ---
 title: "Simulating Spatially Autocorrelated Data"
 author: "Ethan Roubenoff"
-date: "3/4/2021"
+date: "4/3/2021"
 output:
   md_document:
     variant: gfm
@@ -14,17 +14,16 @@ always_allow_html: true
 ---
 
 My [first post](http://www.eroubenoff.net/2021-03-03-dead_lyrics/) was a
-lot of fun but I wanted to do a real post on something academic.
-I'm working my way though old markdown scratch notebooks to fill out 
-this blog, and I'll admit that this one is much less charming! Anyway.
-
-Something I’ve struggled with is simulating good spatial data for
-testing; it’s really hard to come up with true autocorrelated data. The
-easiest way I’ve found is with [NIMBLE](https://r-nimble.org/).
+lot of fun but I wanted to do a real post on something academic.  
+I’m working my way through old markdown scratch notebooks to fill out
+this blog, and I’ll admit that this one is much less charming! Something
+I’ve struggled with is simulating good spatial data for testing; it’s
+really hard to come up with true autocorrelated data. The easiest way
+I’ve found is with [NIMBLE](https://r-nimble.org/).
 
 Let’s work with the CA counties dataset:
 
-    CA_shp <- tigris::counties(state = "CA", cb = TRUE, class = "sf", refresh=TRUE)
+    invisible({capture.output({CA_shp <- tigris::counties(state = "CA", cb = TRUE, class = "sf", refresh=TRUE)})})
     suppressMessages(qtm(CA_shp))
 
 ![](/assets/img/2021-03-04-spatial_sim/unnamed-chunk-2-1.png)<!-- --> I
@@ -43,9 +42,8 @@ it for its R-native implementation of Bugs, this is super helpful.
 
 Let’s first talk about autoregressive distributions. The simplest one is
 the intrinsically autoregressive (IAR) distribution:
-$$
-  \\phi\_i\|\\Phi\_{-i} \\sim N\\left(\\frac{1}{n(j\\sim i)} \\sum\_{j \\sim i}{\\phi\_j}, \\tau^2 \\right)
-$$
+
+$$\\phi\_i\|\\Phi\_{-i} \\sim N\\left(\\frac{1}{n(j\\sim i)} \\sum\_{j \\sim i}{\\phi\_j}, \\tau^2 \\right)$$
 
 I think this is the simplest spatial model but it is far from perfect.
 Each observation is assumed to be normally distributed with mean equal
@@ -70,7 +68,8 @@ there’s any ambiguity what’s going on there.
 However, as mentioned above, this doesn’t integrate. It works great as a
 prior, but you can’t simulate from it. For that, we turn to the *proper*
 conditionally autoregressive distribution (CAR):
-*ϕ*<sub>*i*</sub>\|*Φ*<sub> − *i*</sub>, *μ*, *γ*, *C* ∼ *N*(*μ*<sub>*i*</sub>+∑<sub>*j* ∼ *i*</sub>*ρ**C*<sub>*i**j*</sub>(*ϕ*<sub>*j*</sub> − *μ*<sub>*i*</sub>),*τ*<sup>2</sup>)
+
+*ϕ*<sub>*i*</sub>\|*Φ*<sub> − *i*</sub>, *μ*, *γ*, *C* ∼ *N*(*μ*<sub>*i*</sub>+∑<sub>*j* ∼ *i*</sub>*γ**C*<sub>*i**j*</sub>(*ϕ*<sub>*j*</sub> − *μ*<sub>*i*</sub>),*τ*<sup>2</sup>)
 
 The funky thing here is the addition of *γ*, the
 <sub>autocorrelation</sub> paramter. This isn’t really autocorrelation
@@ -260,11 +259,17 @@ Looks like rho/gamma need to be within -1.414 and 1. Let’s test:
 
 
 
-    for (i in 1:nrow(df)) {
-      df[i, "i"]  <- sim.f(df[i, "gamma_vec"], df[i, "tau_vec"], CA_shp, adj, num)
+    if (F) {
+      for (i in 1:nrow(df)) {
+        df[i, "i"]  <- sim.f(df[i, "gamma_vec"], df[i, "tau_vec"], CA_shp, adj, num)
+      }
+      save(df, file = "morans_df.Rdata")
+    } else {
+      load("morans_df.Rdata")
     }
 
-    # df$tau_vec <- log10(df$tau_vec)
+
+    df$tau_vec <- log10(df$tau_vec)
 
 
     ggplot(df) +
@@ -293,7 +298,7 @@ them:
     ##  Asymptotic General Independence Test
     ## 
     ## data:  i by gamma_vec, tau_vec
-    ## maxT = 8.6712, p-value < 2.2e-16
+    ## maxT = 4.3973, p-value = 2.192e-05
     ## alternative hypothesis: two.sided
 
 Nope! Not independent :+)
