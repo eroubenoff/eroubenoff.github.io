@@ -43,7 +43,7 @@ it for its R-native implementation of Bugs, this is super helpful.
 Let’s first talk about autoregressive distributions. The simplest one is
 the intrinsically autoregressive (IAR) distribution:
 
-$$*i\|*{-i} N( \_{j i}{\_j}, ^2 )$$
+<img src="http://www.sciweavers.org/tex2img.php?eq=%5Cphi_i%7C%5CPhi_%7B-i%7D%20%5Csim%20N%5Cleft%28%5Cfrac%7B1%7D%7Bn%28j%5Csim%20i%29%7D%20%5Csum_%7Bj%20%5Csim%20i%7D%7B%5Cphi_j%7D%2C%20%5Ctau%5E2%20%5Cright%29&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" align="center" border="0" alt="\phi_i|\Phi_{-i} \sim N\left(\frac{1}{n(j\sim i)} \sum_{j \sim i}{\phi_j}, \tau^2 \right)" width="242" height="57" />
 
 I think this is the simplest spatial distribution but it is far from
 perfect. Each observation is assumed to be normally distributed with
@@ -69,7 +69,7 @@ However, as mentioned above, this doesn’t integrate. It works great as a
 prior, but you can’t simulate from it. For that, we turn to the *proper*
 conditionally autoregressive distribution (CAR):
 
-$$*i\|*{-i}, , , C N(*i + *{j i}{C\_{ij}(\_j - \_i)}, ^2 )$$
+<img src="http://www.sciweavers.org/tex2img.php?eq=%5Cphi_i%7C%5CPhi_%7B-i%7D%2C%20%5Cmu%2C%20%5Cgamma%2C%20C%20%5Csim%20N%5Cleft%28%5Cmu_i%20%2B%20%5Csum_%7Bj%20%5Csim%20i%7D%7B%5Cgamma%20C_%7Bij%7D%28%5Cphi_j%20-%20%5Cmu_i%29%7D%2C%20%5Ctau%5E2%20%5Cright%29&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" align="center" border="0" alt="\phi_i|\Phi_{-i}, \mu, \gamma, C \sim N\left(\mu_i + \sum_{j \sim i}{\gamma C_{ij}(\phi_j - \mu_i)}, \tau^2 \right)" width="356" height="57" />
 
 The funky thing here is the addition of *γ*, the
 <sub>autocorrelation</sub> paramter. This isn’t really autocorrelation
