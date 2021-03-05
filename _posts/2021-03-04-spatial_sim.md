@@ -43,23 +43,23 @@ it for its R-native implementation of Bugs, this is super helpful.
 Let’s first talk about autoregressive distributions. The simplest one is
 the intrinsically autoregressive (IAR) distribution:
 
-$$\\phi\_i\|\\Phi\_{-i} \\sim N\\left(\\frac{1}{n(j\\sim i)} \\sum\_{j \\sim i}{\\phi\_j}, \\tau^2 \\right)$$
+$$*i\|*{-i} N( \_{j i}{\_j}, ^2 )$$
 
-I think this is the simplest spatial model but it is far from perfect.
-Each observation is assumed to be normally distributed with mean equal
-to the average of its neighbors and with some constant variance. The
-main benefit here is that there is no weird """"“autocorrellation”""""
-parameter (like in other models, see below and Banerjee, Carlin, and
-Gelfand 2015 for a really great description of why this parameter isn’t
-really autocorrelation), but it doesn’t integrate; hence it can only be
-used as a prior. That’s why we *love* bayesian models for spatial data,
-right? Think about it: if you define each observation as a function of
-its neighbors, then there’s no ‘reference’ point setting the overall
-threshold, only the relative values. It also assumes stationarity and
-doesn’t let variance vary spatially, but I’m sure that could be built in
-as well. I’ve never been able to demonstrate this conclusively, but I
-think that the IAR model is best when there is a super strong spatial
-pattern.
+I think this is the simplest spatial distribution but it is far from
+perfect. Each observation is assumed to be normally distributed with
+mean equal to the average of its neighbors and with some constant
+variance. The main benefit here is that there is no weird
+""""“autocorrellation”"""" parameter (like in other models, see below
+and Banerjee, Carlin, and Gelfand 2015 for a really great description of
+why this parameter isn’t really autocorrelation), but it doesn’t
+integrate; hence it can only be used as a prior. That’s why we *love*
+bayesian models for spatial data, right? Think about it: if you define
+each observation as a function of its neighbors, then there’s no
+‘reference’ point setting the overall threshold, only the relative
+values. It also assumes stationarity and doesn’t let variance vary
+spatially, but I’m sure that could be built in as well. I’ve never been
+able to demonstrate this conclusively, but I think that the IAR model is
+best when there is a super strong spatial pattern.
 
 Another benefit: I think the conditional specification above is easily
 the most interpretable of the spatial distributions. I don’t think
@@ -69,7 +69,7 @@ However, as mentioned above, this doesn’t integrate. It works great as a
 prior, but you can’t simulate from it. For that, we turn to the *proper*
 conditionally autoregressive distribution (CAR):
 
-*ϕ*<sub>*i*</sub>\|*Φ*<sub> − *i*</sub>, *μ*, *γ*, *C* ∼ *N*(*μ*<sub>*i*</sub>+∑<sub>*j* ∼ *i*</sub>*γ**C*<sub>*i**j*</sub>(*ϕ*<sub>*j*</sub> − *μ*<sub>*i*</sub>),*τ*<sup>2</sup>)
+$$*i\|*{-i}, , , C N(*i + *{j i}{C\_{ij}(\_j - \_i)}, ^2 )$$
 
 The funky thing here is the addition of *γ*, the
 <sub>autocorrelation</sub> paramter. This isn’t really autocorrelation
@@ -269,7 +269,6 @@ Looks like rho/gamma need to be within -1.414 and 1. Let’s test:
     }
 
 
-    df$tau_vec <- log10(df$tau_vec)
 
 
     ggplot(df) +
@@ -298,7 +297,7 @@ them:
     ##  Asymptotic General Independence Test
     ## 
     ## data:  i by gamma_vec, tau_vec
-    ## maxT = 4.3973, p-value = 2.192e-05
+    ## maxT = 8.4529, p-value < 2.2e-16
     ## alternative hypothesis: two.sided
 
 Nope! Not independent :+)
