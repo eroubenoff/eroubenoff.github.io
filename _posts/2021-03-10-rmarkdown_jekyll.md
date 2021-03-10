@@ -1,7 +1,7 @@
 ---
 title: "Compiling R Markdown to Jekyll"
 author: "Ethan Roubenoff"
-date: "3/10/2021"
+date: "10/3/2021"
 output:
   md_document:
     variant: gfm
@@ -14,6 +14,7 @@ tags:
 - jekyll
 - r-markdown
 always_allow_html: yes
+
 ---
 
 I have to confess that my [last
@@ -26,15 +27,18 @@ easy, but there’s a few tricks. I learned a ton about how R Markdown
 works and wanted to put the notes here, mostly for my future reference,
 and maybe for anyone else trying to go from R Markdown to Jekyll.
 
-[This post by Steven Miller was really waht got me going in the right
+[This post by Steven Miller was really what got me going in the right
 direction.](http://svmiller.com/blog/2019/08/two-helpful-rmarkdown-jekyll-tips/)
 
-Here are the requirements I had: \* R Markdown post needed to be in any
-arbitrary location on my computer \* Rendered .md output file had to be
-in `~/eroubenoff.github.io/_posts` \* Any images needed to be in
-`~/eroubenoff.github.io/assets/img` \* Of course, the document had to be
-renderable by Github/Jekyll \* LaTex needed to be renderable (a whole
-other can of worms!)
+Here are the requirements I had:
+
+-   R Markdown post needed to be in any arbitrary location on my
+    computer
+-   Rendered .md output file had to be in
+    `~/eroubenoff.github.io/_posts`
+-   Any images needed to be in `~/eroubenoff.github.io/assets/img`
+-   Of course, the document had to be renderable by Github/Jekyll
+    -   LaTex needed to be renderable (a whole other can of worms!)
 
 I began by first trying to knit my R Markdown doc to GFM
 (Github-Flavored Markdown). I had a number of figured in my document,
@@ -48,13 +52,16 @@ header:
     ---
     title: "Compiling R Markdown to Jekyll"
     author: "Ethan Roubenoff"
-    date: "3/10/2021"
+    date: "10/3/2021"
     output:
       md_document:
         variant: gfm
         preserve_yaml: TRUE
     knit: (function(inputFile, encoding) {
-      rmarkdown::render(inputFile, encoding = encoding, output_file=paste0(Sys.Date(), "-", sub(".Rmd", ".md",inputFile)), output_dir = "~/eroubenoff.github.io/_posts") })
+      rmarkdown::render(inputFile, 
+      encoding = encoding, 
+      output_file=paste0(Sys.Date(), "-", sub(".Rmd", ".md",inputFile)), 
+      output_dir = "~/eroubenoff.github.io/_posts") })
     layout: post
     tags: [jekyll, r-markdown]
     always_allow_html: true
@@ -91,10 +98,13 @@ are not using pandoc, we need to keep the images and link them to the
 
     # If the document is currently being knit, do this; skip it in normal execution
     if (!is.null(knitr::current_input())){
+      
       # Output path for figures
       fig_path <- paste0("assets/img/", str_remove(knitr::current_input(), ".Rmd"), "/")
+      
       # Set base directories
       knitr::opts_knit$set(base.dir = base_dir, base.url = base_url)
+      
       # Set figure directories
       knitr::opts_chunk$set(fig.path = fig_path,
                           cache.path = '../cache/',
