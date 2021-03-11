@@ -14,7 +14,7 @@ author: Ethan Roubenoff
 # --- List of links in the navigation bar --- #
 
 navbar-links:
-  CV: "cv"
+  CV/Resume: "cv_resume"
   Research: "research"
   #  Resources:
   #  - Beautiful Jekyll: "https://beautifuljekyll.com"
