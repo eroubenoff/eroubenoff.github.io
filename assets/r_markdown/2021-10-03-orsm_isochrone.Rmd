@@ -266,7 +266,7 @@ er_osrmIsochrone <- function(loc, breaks = c(30), exclude = NULL, res = 30, retu
 }
 ```
 
-There are a few other operations, and you can view the full source code [here]("assets/r_markdown/er_osrmIsochrone.R").
+There are a few other operations, and you can view the full source code [here](assets/r_markdown/er_osrmIsochrone.R).
 
 Let's test how fast it is:
 ```{r}
@@ -320,8 +320,11 @@ isochrones_er_parallel_time <- toc()
 
 
 
-In this toy case it's not a huge speed up, but on our applied problem,
-I was able to cut a 2-hour method down to 30 mintes. And that's not nothing!
+In this toy case it’s not a huge speed up (about 30%), but on our applied problem, I
+was able to cut a 2-hour method down to 30 minutes. And that’s not
+nothing\!
 
+Final note: I believe that if you lower the resolution, this difference matters 
+less.  So this is all scale dependent.
 
 

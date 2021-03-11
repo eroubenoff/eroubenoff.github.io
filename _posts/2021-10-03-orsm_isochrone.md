@@ -108,7 +108,7 @@ isochrones_base_time <- toc()
 
     ## 305.853 sec elapsed
 
-This took about 95 seconds to run 100 points. This is fine for a small
+This took about 5 minutes to run 100 points. This is fine for a small
 operation, but really a pain for a bigger one\! Some values will fail.
 That’s okay– debugging that is a pain and ususally just means that
 there’s no road that gets to that point. And I know it’s weird that
@@ -252,7 +252,7 @@ er_osrmIsochrone <- function(loc, breaks = c(30), exclude = NULL, res = 30, retu
 ```
 
 There are a few other operations, and you can view the full source code
-[here](%22assets/r_markdown/er_osrmIsochrone.R%22).
+[here](assets/r_markdown/er_osrmIsochrone.R).
 
 Let’s test how fast it is:
 
@@ -287,7 +287,7 @@ isochrones_er_time <- toc()
 
     ## 229.679 sec elapsed
 
-That’s not a bad speed up\! 74 seconds; saved a few. However, the real
+That’s not a bad speed up\! Almost a minute and a half less. However, the real
 advantage comes when you have thousands of points and want to run them
 in parallel:
 
@@ -312,3 +312,6 @@ isochrones_er_parallel_time <- toc()
 In this toy case it’s not a huge speed up (about 30%), but on our applied problem, I
 was able to cut a 2-hour method down to 30 minutes. And that’s not
 nothing\!
+
+Final note: I believe that if you lower the resolution, this difference matters 
+less.  So this is all scale dependent.
