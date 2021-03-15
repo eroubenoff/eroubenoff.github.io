@@ -56,6 +56,7 @@ I don't think I've so dramatically changed my mind on anything.
 Going for a good medium-length walk has been my 'anchoring vignette' of the pandemic.
 I try and do it every day.  More than two days without walking and I feel it:
 I don't sleep right, I'm eating like garbage, I'm anxious and antsy.  
+
 Quite literally, walking keeps me sane.
 
 It took some experimentation but I settled on a good 4-ish mile loop.  I live
@@ -72,7 +73,7 @@ at my apartment, for privacy, I guess.)
 
 Here's the view from Lawrence Hall of Science (The top of the purple route).
 You can see my apartment in here, actually.
-![](assets/img/2021-03-15-walking/observatory.jpg)
+![](/assets/img/2021-03-15-walking/observatory.jpg)
 
 
 
