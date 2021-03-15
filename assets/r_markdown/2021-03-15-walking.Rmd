@@ -1,6 +1,7 @@
 ---
 title: 'One Year In Lockdown: How Far Have I Walked?'
 author: "Ethan Roubenoff"
+date: "15/03/2021"
 output:
   md_document:
     variant: gfm
