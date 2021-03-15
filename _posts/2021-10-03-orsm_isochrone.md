@@ -11,8 +11,7 @@ knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = e
   "~/eroubenoff.github.io/_posts") })
 layout: post
 tags:
-- jekyll
-- r-markdown
+- osrm
 always_allow_html: yes
 
 ---
